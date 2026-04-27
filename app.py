@@ -49,7 +49,7 @@ st.plotly_chart(fig_vol, use_container_width=True)
 
 st.subheader("Price Action vs. Particle Filter Signal")
 fig_price = go.Figure()
-fig_price.add_trace(go.Scatter(x=df.index, y=df['Close'], name='Market Price', line=dict(color='gray', alpha=0.5)))
+fig_price.add_trace(go.Scatter(x=df.index, y=df['Close'], name='Market Price', line=dict(color='rgba(128, 128, 128, 0.5)')))
 fig_price.add_trace(go.Scatter(x=df.index, y=df['Close'].rolling(5).mean(), name='Filtered Trend', line=dict(color='blue', width=2)))
 fig_price.update_layout(height=400, template="plotly_white")
 st.plotly_chart(fig_price, use_container_width=True)
