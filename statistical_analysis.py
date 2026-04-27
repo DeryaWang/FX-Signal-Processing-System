@@ -54,6 +54,31 @@ def evaluate_model_complexity(series):
     print(f"\nOptimal Model Order by AIC: {best_order}")
     return best_order
 
+from arch import arch_model
+
+def fit_garch_model(series):
+    """
+    Fits a GARCH(1,1) model to the return series.
+    Returns: (Alpha, Beta, Conditional Volatility Series, Next-day Forecast)
+    """
+    # Multiply by 100 for numerical stability in GARCH estimation
+    scaled_series = series * 100
+    
+    model = arch_model(scaled_series, vol='Garch', p=1, q=1, dist='normal', rescale=False)
+    results = model.fit(disp='off')
+    
+    alpha = results.params['alpha[1]']
+    beta = results.params['beta[1]']
+    
+    # Conditional volatility (standard deviation)
+    cond_vol = results.conditional_volatility / 100.0 # Scale back
+    
+    # Forecast next period
+    forecast = results.forecast(horizon=1)
+    next_vol = np.sqrt(forecast.variance.values[-1, 0]) / 100.0
+    
+    return alpha, beta, cond_vol, next_vol
+
 if __name__ == "__main__":
     try:
         # Load the data filtered in the previous step
